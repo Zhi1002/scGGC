@@ -64,51 +64,40 @@ if __name__ == "__main__":
 
     start_time_2 = time.time()
 
-    # # 使用KNN算法获取细胞间的邻接图
-    # knn = NearestNeighbors(n_neighbors=10, metric='precomputed')
-    # knn.fit(B)# 使用距离矩阵B进行KNN训练
-    # # 获取K个最近邻居的图表示
-    # knn_graph = knn.kneighbors_graph()
-    # # 注意：这将创建一个较大的矩阵，可能占用大量内存
-    # A1 = knn_graph.toarray()
-    k = 10
-    knn = NearestNeighbors(n_neighbors=k, metric='precomputed')
+    knn = NearestNeighbors(n_neighbors=40, metric='precomputed')
     knn.fit(B)
+    knn_graph = knn.kneighbors_graph()
+    A1 = knn_graph.toarray()
+    A1_sparse = coo_matrix((np.ones_like(A1.nonzero()[0]), A1.nonzero()), shape=A1.shape)
+    A1_full = A1_sparse.toarray()
+    A1_normalized = A1_full / (A1_full.sum(axis=1, keepdims=True) + 1e-6)
+    # k = 10
+    # knn = NearestNeighbors(n_neighbors=k, metric='precomputed')
+    # knn.fit(B)
 
-    # Step 2. 获取每个点的k近邻（返回的是索引和距离）
-    distances, indices = knn.kneighbors(B)
+    # # Step 2. 获取每个点的k近邻（返回的是索引和距离）
+    # distances, indices = knn.kneighbors(B)
 
-    # Step 3. 使用高斯核函数生成权重
-    sigma = np.mean(distances)  # 也可以手动指定，比如 sigma=0.5
-    weights = np.exp(- (distances ** 2) / (2 * sigma ** 2))
+    # # Step 3. 使用高斯核函数生成权重
+    # sigma = np.mean(distances)  # 也可以手动指定，比如 sigma=0.5
+    # weights = np.exp(- (distances ** 2) / (2 * sigma ** 2))
 
-    # Step 4. 生成稀疏邻接矩阵（只保留k近邻）
-    rows = np.repeat(np.arange(B.shape[0]), k)  # 每个点重复k次
-    cols = indices.flatten()
-    data = weights.flatten()
+    # # Step 4. 生成稀疏邻接矩阵（只保留k近邻）
+    # rows = np.repeat(np.arange(B.shape[0]), k)  # 每个点重复k次
+    # cols = indices.flatten()
+    # data = weights.flatten()
 
-    A_weighted_sparse = coo_matrix((data, (rows, cols)), shape=B.shape)
+    # A_weighted_sparse = coo_matrix((data, (rows, cols)), shape=B.shape)
 
-    # 如果需要dense格式
-    A_weighted_dense = A_weighted_sparse.toarray()
+    # # 如果需要dense格式
+    # A_weighted_dense = A_weighted_sparse.toarray()
 
-    # Step 5. （可选）行归一化
+    # # Step 5. （可选）行归一化
 
-    A1_normalized = normalize(A_weighted_dense, norm='l1', axis=1)
+    # A1_normalized = normalize(A_weighted_dense, norm='l1', axis=1)
     end_time_2 = time.time()
     elapsed_time_2 = end_time_2 - start_time_2
     print(f"Saving CSV file took {elapsed_time_2:.2f} seconds.")
-
-    # # 如果需要稀疏格式的邻接矩阵以节省内存
-    # (i, j) = knn_graph.nonzero()
-    # A1_sparse = coo_matrix((np.ones_like(i), (i, j)), shape=knn_graph.shape)
-    # # 如果需要将稀疏矩阵转换为普通矩阵格式，可以使用toarray()方法
-    # A1_full = A1_sparse.toarray()
-    # print(A1_full)
-    #
-    # # 对邻接矩阵进行行归一化处理
-    # row_sums = A1_full.sum(axis=1)
-    # A1_normalized = A1_full / row_sums[:, np.newaxis]
     print(A1_normalized)
 
     # # 将邻接矩阵 A1_normalized 存储为 CSV 文件
