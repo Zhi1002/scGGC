@@ -12,9 +12,10 @@
 # Overview of the repository
     processing.py Data Preprocessing
     model.py      Graph Autoencoder and Adversarial Model
-    scGGC。py     Main Execution File
+    scGGC.py      Main Execution File
+    training.py   Model Training Module
 
 # Installation
-# Start by grabbing this source codes:
+pip install PyTorch：1.13.1+cu116；NumPy：1.26.4; pandas：2.2.3; scikit-learn：1.5.2
 
     
