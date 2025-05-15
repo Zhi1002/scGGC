@@ -14,8 +14,12 @@
     model.py      Graph Autoencoder and Adversarial Model
     scGGC.py      Main Execution File
     training.py   Model Training Module
+    
+# Clone the Repository
+git clone https://github.com/Zhi1002/scGGC.git
 
 # Installation
-pip install PyTorch：1.13.1+cu116；NumPy：1.26.4; pandas：2.2.3; scikit-learn：1.5.2
+pip install torch==1.13.1+cu116 numpy==1.26.4 pandas==2.2.3 scikit-learn==1.5.2
+
 
     
