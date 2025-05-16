@@ -113,7 +113,7 @@ if __name__ == "__main__":
     # W_normalized = W_original.div(row_sums, axis=0)
     W_normalized = normalize(W_original, norm='l1', axis=1)
 
-    alpha = 0.2  
+    alpha = 0.3  
     beta = 1 - alpha  
     weighted_A1 = alpha * A1_normalized
     weighted_W = beta * W_normalized
