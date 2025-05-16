@@ -111,7 +111,7 @@ def train_ac_gan(X_train, y_train, device, num_classes, input_dim, n_epochs=30):
 
             opt_D.zero_grad()
             out_r_src, out_r_cls, _ = D(real_x)
-            loss_r = adv_loss(out_r_src, real_src) + cls_loss(out_r_cls, real_y)
+            loss_r = adv_loss(out_r_src, real_src) + 0.9 * cls_loss(out_r_cls, real_y)
             z = torch.randn(bs, noise_dim, device=device)
             fake_y = torch.randint(0, num_classes, (bs,), device=device)
             fake_x = G(z, fake_y)
@@ -122,7 +122,7 @@ def train_ac_gan(X_train, y_train, device, num_classes, input_dim, n_epochs=30):
 
             opt_G.zero_grad()
             out_f_src2, out_f_cls2, _ = D(fake_x)
-            g_loss = adv_loss(out_f_src2, real_src) + cls_loss(out_f_cls2, fake_y)
+            g_loss = adv_loss(out_f_src2, real_src) + 0.7 * cls_loss(out_f_cls2, fake_y)
             g_loss.backward(); opt_G.step()
 
             d_loss_acc += d_loss.item()
